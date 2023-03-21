@@ -1,7 +1,8 @@
-import { TicketModule } from './ticket/ticket.module';
+import { TicketModule } from '../modules/ticket/ticket.module';
 import configs from './config';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
+import { UsersModule } from '../modules/users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -9,6 +10,7 @@ import { Module } from '@nestjs/common';
       load: [configs],
     }),
     TicketModule,
+    UsersModule,
   ],
 })
 export default class AppModule {}
