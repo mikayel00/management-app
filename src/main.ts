@@ -15,9 +15,10 @@ async function bootstrap() {
     .setVersion(SWAGGER.API_VERSION)
     .addTag(SWAGGER.TAG)
     .build();
-  app.setGlobalPrefix('v1');
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(SWAGGER.DOCUMENTATION_URI, app, document);
+  SwaggerModule.setup(SWAGGER.DOCUMENTATION_URL, app, document);
+
+  app.setGlobalPrefix('v1');
 
   await app.listen(configService.get('GLOBAL.PORT'));
 }
