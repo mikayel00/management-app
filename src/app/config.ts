@@ -1,8 +1,15 @@
 import * as process from 'process';
 const configs = () => ({
   NODE_ENV: process.env.NODE_ENV || 'development',
-  global: {
-    port: process.env.PORT || 3000,
+  GLOBAL: {
+    PORT: process.env.PORT || 3000,
+  },
+  MONGODB: {
+    URI:
+      process.env.MONGODB_URI ||
+      'mongodb+srv://dumbuser:dumbpass@cluster0.cgroo9x.mongodb.net/?retryWrites=true&w=majority',
+    USER: process.env.MONGODB_USER || 'dumbuser',
+    PASSWORD: process.env.MONGODB_PASS || 'dumbpassword',
   },
 });
 export default configs;
