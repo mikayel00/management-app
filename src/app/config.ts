@@ -5,7 +5,7 @@ const configs = () => ({
     PORT: process.env.PORT || 3000,
   },
   MONGODB: {
-    URI:
+    URL:
       process.env.MONGODB_URI ||
       'mongodb+srv://dumbuser:dumbpass@cluster0.cgroo9x.mongodb.net/?retryWrites=true&w=majority',
     USER: process.env.MONGODB_USER || 'dumbuser',
