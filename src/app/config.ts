@@ -7,7 +7,7 @@ const configs = () => ({
   MONGODB: {
     URL:
       process.env.MONGODB_URI ||
-      'mongodb+srv://dumbuser:dumbpass@cluster0.cgroo9x.mongodb.net/?retryWrites=true&w=majority',
+      'mongodb+srv://dumbuser:dumbpass@cluster0.cgroo9x.mongodb.net/app?retryWrites=true&w=majority',
     USER: process.env.MONGODB_USER || 'dumbuser',
     PASSWORD: process.env.MONGODB_PASS || 'dumbpassword',
   },
