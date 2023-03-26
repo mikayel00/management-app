@@ -1,3 +1,5 @@
+<h1 align="center">Management Application</h1>
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
@@ -17,7 +19,13 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a web-based management application designed to help teams organize and track their projects and tasks. This application offers a suite of features to help teams stay on top of their work and meet deadlines.
+
+## Features
+- Project and task creation: Users can create projects and tasks, assign them to team members, and set due dates.
+- Kanban board: A Kanban board allows users to visualize their workflow and move tasks between columns as they progress.
+- Issue tracker: An issue tracker helps users keep track of bugs and other issues that need to be resolved.
+- Reporting and analytics: The application offers a range of reporting and analytics features to help users monitor progress, identify bottlenecks, and improve their processes.
 
 ## Requirements
 
