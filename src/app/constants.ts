@@ -5,3 +5,5 @@ export const SWAGGER = {
   TAG: 'API',
   DOCUMENTATION_URL: '/docs',
 };
+
+export const MONGO_CONNECTION_NAME = 'Main';
