@@ -4,7 +4,7 @@ import { User, UserDocument } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { UserCreateDto } from './dtos/user-create.dto';
-import { USER_ERROR } from '../common/exceptions/exceptions';
+import { USER_ERROR } from '../common/exceptions/constants';
 
 @Injectable()
 export class UsersService {
@@ -18,12 +18,6 @@ export class UsersService {
     return await this.userModel.findOne({ email: email }).exec();
   }
   async createUser(data: UserCreateDto): Promise<User> {
-    const existUser = await this.findUserByEmail(data.email);
-
-    if (existUser) {
-      throw new BadRequestException(USER_ERROR.USER_EXISTS);
-    }
-
     data.password = await this.hashPassword(data.password);
     const createdUser = new this.userModel(data);
     await createdUser.save();
