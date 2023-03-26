@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { UsersModule } from '../modules/users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MONGO_CONNECTION_NAME } from "./constants";
+import { MONGO_CONNECTION_NAME } from './constants';
 @Module({
   imports: [
     ConfigModule.forRoot({
