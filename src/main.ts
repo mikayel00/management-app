@@ -20,7 +20,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(SWAGGER.DOCUMENTATION_URL, app, document);
-
   await app.listen(configService.get('GLOBAL.PORT'));
 }
 bootstrap();
