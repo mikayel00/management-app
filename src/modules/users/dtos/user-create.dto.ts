@@ -15,6 +15,12 @@ export class UserCreateDto {
   secondName: string;
 
   @ApiProperty({
+    description: "Username",
+  })
+  @IsString()
+  username: string;
+
+  @ApiProperty({
     description: "User's email",
   })
   @IsEmail()

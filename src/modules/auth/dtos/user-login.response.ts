@@ -14,5 +14,8 @@ export class AuthUserResponse {
   password: string;
 
   @IsString()
+  username: string;
+
+  @IsString()
   token: string;
 }
