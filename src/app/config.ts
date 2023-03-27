@@ -11,5 +11,7 @@ const configs = () => ({
     USER: process.env.MONGODB_USER || 'dumbuser',
     PASSWORD: process.env.MONGODB_PASS || 'dumbpassword',
   },
+  SECRET_JWT: process.env.SECRET_JWT,
+  EXPIRE_JWT: process.env.EXPIRE_JWT,
 });
 export default configs;

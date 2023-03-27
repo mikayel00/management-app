@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from '../modules/users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from '../modules/auth/auth.module';
+import { TokenModule } from '../modules/token/token.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +23,7 @@ import { AuthModule } from '../modules/auth/auth.module';
     TicketsModule,
     UsersModule,
     AuthModule,
+    TokenModule,
   ],
 })
 export default class AppModule {}
