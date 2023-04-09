@@ -1,20 +1,44 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Patch,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { UserCreateDto } from './dtos/user-create.dto';
-import { User } from './schemas/user.schema';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserUpdateDto } from './dtos/user-update.dto';
+import { JwtAuthGuard } from '../guards/jwt-guard';
 
 @ApiTags('Users Endpoints')
 @Controller('/users')
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
-  @ApiOperation({ summary: 'Create user' })
-  @ApiCreatedResponse({
-    type: UserCreateDto,
-    description: 'Create user',
+  constructor(private readonly usersService: UsersService) {}
+  @ApiOperation({ summary: 'User update' })
+  @ApiOkResponse({
+    type: UserUpdateDto,
+    description: 'User update',
   })
-  @Post('/create')
-  createUsers(@Body() data: UserCreateDto): Promise<User> {
-    return this.userService.createUser(data);
+  @UseGuards(JwtAuthGuard)
+  @Patch()
+  updateUser(
+    @Body() data: UserUpdateDto,
+    @Req() request,
+  ): Promise<UserUpdateDto> {
+    const user = request.user;
+    return this.usersService.updateUser(user.email, data);
+  }
+
+  @ApiOperation({ summary: 'User delete' })
+  @ApiOkResponse({
+    type: UserUpdateDto,
+    description: 'User update',
+  })
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  deleteUser(@Req() request) {
+    const user = request.user;
+    return this.usersService.deleteUser(user.email);
   }
 }
