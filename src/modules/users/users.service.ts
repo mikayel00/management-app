@@ -4,6 +4,7 @@ import { User, UserDocument } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { UserCreateDto } from './dtos/user-create.dto';
+import { UserUpdateDto } from "./dtos/user-update.dto";
 
 @Injectable()
 export class UsersService {
@@ -28,5 +29,17 @@ export class UsersService {
       .findOne({ email: email })
       .select(['-password'])
       .exec();
+  }
+
+  async updateUser(email: string, dto: UserUpdateDto) {
+    return this.userModel
+      .findOneAndUpdate({ email: email }, dto)
+      .select(['-password']);
+  }
+
+  async deleteUser(email: string) {
+    return this.userModel
+      .findOneAndDelete({ email: email })
+      .select(['-password']);
   }
 }
