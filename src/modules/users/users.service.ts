@@ -4,8 +4,8 @@ import { User, UserDocument } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { UserCreateDto } from './dtos/user-create.dto';
-import { UserUpdateDto } from "./dtos/user-update.dto";
-import { EXCLUDED_FIELDS } from "./constants";
+import { UserUpdateDto } from './dtos/user-update.dto';
+import { EXCLUDED_FIELDS } from './constants';
 
 @Injectable()
 export class UsersService {
