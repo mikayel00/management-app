@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { UserCreateDto } from './dtos/user-create.dto';
 import { UserUpdateDto } from "./dtos/user-update.dto";
+import { EXCLUDED_FIELDS } from "./constants";
 
 @Injectable()
 export class UsersService {
@@ -27,19 +28,19 @@ export class UsersService {
   async publicUser(email: string) {
     return await this.userModel
       .findOne({ email: email })
-      .select(['-password'])
+      .select(EXCLUDED_FIELDS)
       .exec();
   }
 
-  async updateUser(email: string, dto: UserUpdateDto) {
+  async updateUser(email: string, dto: UserUpdateDto): Promise<UserUpdateDto> {
     return this.userModel
       .findOneAndUpdate({ email: email }, dto)
-      .select(['-password']);
+      .select(EXCLUDED_FIELDS);
   }
 
-  async deleteUser(email: string) {
+  async deleteUser(email: string): Promise<User> {
     return this.userModel
       .findOneAndDelete({ email: email })
-      .select(['-password']);
+      .select(EXCLUDED_FIELDS);
   }
 }

@@ -33,10 +33,4 @@ export class AuthController {
   login(@Body() data: UserLoginDto): Promise<UserCreateDto> {
     return this.authService.loginUser(data);
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('/test')
-  test() {
-    return true;
-  }
 }
