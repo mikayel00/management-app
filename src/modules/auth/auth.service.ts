@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '../users/services/users.service';
 import { UserCreateDto } from '../users/dtos/user-create.dto';
 import { USER_ERROR } from '../common/exceptions/constants';
 import { UserLoginDto } from './dtos/user-login.dto';
@@ -14,7 +14,7 @@ export class AuthService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async registerUsers(data: UserCreateDto): Promise<UserCreateDto> {
+  async registerUser(data: UserCreateDto): Promise<UserCreateDto> {
     const existUser = await this.usersService.findUserByEmail(data.email);
 
     if (existUser) throw new BadRequestException(USER_ERROR.USER_EXISTS);
@@ -22,7 +22,7 @@ export class AuthService {
     return this.usersService.createUser(data);
   }
 
-  async loginUser(data: UserLoginDto): Promise<AuthUserResponse> {
+  async loginUser(data: UserLoginDto): Promise<any> {
     const existUser = await this.usersService.findUserByEmail(data.email);
     if (!existUser) throw new BadRequestException(USER_ERROR.USER_NOT_EXISTS);
 
@@ -32,11 +32,7 @@ export class AuthService {
     );
     if (!validatePassword) throw new BadRequestException(USER_ERROR.WRONG_DATA);
     const user = await this.usersService.publicUser(data.email);
-
-    const token = await this.tokenService.generateJwtToken({
-      name: existUser.firstName,
-      email: existUser.email,
-    });
-    return { ...user, token };
+    const token = await this.tokenService.generateJwtToken(user);
+    return { user, token };
   }
 }

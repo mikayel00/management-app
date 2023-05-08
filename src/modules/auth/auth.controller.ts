@@ -20,7 +20,7 @@ export class AuthController {
   })
   @Post('/register')
   register(@Body() data: UserCreateDto): Promise<UserCreateDto> {
-    return this.authService.registerUsers(data);
+    return this.authService.registerUser(data);
   }
 
   @ApiOperation({ summary: 'Login user' })

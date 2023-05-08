@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './schemas/user.schema';
+import { User, UserDocument } from '../schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
-import { UserCreateDto } from './dtos/user-create.dto';
-import { UserUpdateDto } from './dtos/user-update.dto';
-import { EXCLUDED_FIELDS } from './constants';
+import { UserCreateDto } from '../dtos/user-create.dto';
+import { UserUpdateDto } from '../dtos/user-update.dto';
+import { EXCLUDED_FIELDS } from '../constants';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+  ) {}
 
   async hashPassword(password: string) {
     return bcrypt.hash(password, 10);
@@ -18,7 +20,7 @@ export class UsersService {
   async findUserByEmail(email: string) {
     return await this.userModel.findOne({ email: email }).exec();
   }
-  async createUser(data: UserCreateDto): Promise<User> {
+  async createUser(data: UserCreateDto): Promise<UserCreateDto> {
     data.password = await this.hashPassword(data.password);
     const createdUser = new this.userModel(data);
     await createdUser.save();
@@ -28,6 +30,7 @@ export class UsersService {
   async publicUser(email: string) {
     return await this.userModel
       .findOne({ email: email })
+      .populate({ path: 'tickets', select: EXCLUDED_FIELDS })
       .select(EXCLUDED_FIELDS)
       .exec();
   }
@@ -42,5 +45,13 @@ export class UsersService {
     return this.userModel
       .findOneAndDelete({ email: email })
       .select(EXCLUDED_FIELDS);
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return this.userModel
+      .find()
+      .populate('tickets')
+      .select(EXCLUDED_FIELDS)
+      .exec();
   }
 }
