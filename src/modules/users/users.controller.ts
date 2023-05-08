@@ -26,7 +26,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get all tickets' })
   @ApiOkResponse({
-    type: TicketCreateDto,
+    type: [TicketCreateDto],
     description: 'Get all tickets',
   })
   @UseGuards(JwtAuthGuard)
@@ -37,7 +37,7 @@ export class UsersController {
   @ApiOperation({ summary: 'User update' })
   @ApiOkResponse({
     type: UserUpdateDto,
-    description: 'User update',
+    description: 'Update authorized user',
   })
   @UseGuards(JwtAuthGuard)
   @Patch()
@@ -45,20 +45,18 @@ export class UsersController {
     @Body() data: UserUpdateDto,
     @Req() request,
   ): Promise<UserUpdateDto> {
-    const user = request.user;
-    console.log(user);
+    const { user } = request;
     return this.usersService.updateUser(user.email, data);
   }
 
   @ApiOperation({ summary: 'User delete' })
   @ApiNoContentResponse({
-    type: UserUpdateDto,
-    description: 'User delete',
+    description: 'Delete authorized user',
   })
   @UseGuards(JwtAuthGuard)
   @Delete()
   deleteUser(@Req() request): Promise<User> {
-    const user = request.user;
+    const { user } = request;
     return this.usersService.deleteUser(user.email);
   }
 }

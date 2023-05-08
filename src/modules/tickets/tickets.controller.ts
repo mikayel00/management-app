@@ -12,6 +12,7 @@ import {
 import { TicketsService } from './services/tickets.service';
 import {
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -19,14 +20,11 @@ import {
 import { TicketCreateDto } from './dtos/ticket-create.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-guard';
 import { Ticket } from './schemas/ticket.schema';
-import { AuthService } from "../auth/auth.service";
 
 @ApiTags('Tickets Endpoints')
 @Controller('tickets')
 export class TicketsController {
-  constructor(
-    private readonly ticketService: TicketsService,
-  ) {}
+  constructor(private readonly ticketService: TicketsService) {}
 
   @ApiOperation({ summary: 'Create a ticket' })
   @ApiCreatedResponse({
@@ -42,7 +40,7 @@ export class TicketsController {
 
   @ApiOperation({ summary: 'Get all tickets' })
   @ApiOkResponse({
-    type: TicketCreateDto,
+    type: [TicketCreateDto],
     description: 'Get all tickets',
   })
   @UseGuards(JwtAuthGuard)
@@ -62,8 +60,7 @@ export class TicketsController {
   // }
 
   @ApiOperation({ summary: 'Delete ticket' })
-  @ApiOkResponse({
-    type: TicketCreateDto,
+  @ApiNoContentResponse({
     description: 'Delete ticket',
   })
   @UseGuards(JwtAuthGuard)

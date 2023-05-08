@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString } from 'class-validator';
 import { TicketStages } from '../enums';
-import { User } from "../../users/schemas/user.schema";
 
 export class TicketCreateDto {
   @ApiProperty({
