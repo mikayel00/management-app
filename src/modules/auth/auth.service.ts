@@ -4,7 +4,7 @@ import { UserCreateDto } from '../users/dtos/user-create.dto';
 import { USER_ERROR } from '../common/exceptions/constants';
 import { UserLoginDto } from './dtos/user-login.dto';
 import * as bcrypt from 'bcrypt';
-import { AuthUserResponse } from './dtos/user-login.response';
+import { AuthResponse } from './responses/user-login.response';
 import { TokenService } from '../token/token.service';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class AuthService {
     return this.usersService.createUser(data);
   }
 
-  async loginUser(data: UserLoginDto): Promise<any> {
+  async loginUser(data: UserLoginDto): Promise<AuthResponse> {
     const existUser = await this.usersService.findUserByEmail(data.email);
     if (!existUser) throw new BadRequestException(USER_ERROR.USER_NOT_EXISTS);
 

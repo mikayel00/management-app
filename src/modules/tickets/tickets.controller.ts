@@ -18,7 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { TicketCreateDto } from './dtos/ticket-create.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-guard';
-import { Ticket } from './schemas/ticket.schema';
+import { TicketResponse } from './responses/ticket-response';
 
 @ApiTags('Tickets Endpoints')
 @Controller('tickets')
@@ -27,7 +27,7 @@ export class TicketsController {
 
   @ApiOperation({ summary: 'Create a ticket' })
   @ApiCreatedResponse({
-    type: TicketCreateDto,
+    type: TicketResponse,
     description: 'Create a ticket',
   })
   @UseGuards(JwtAuthGuard)
@@ -35,19 +35,19 @@ export class TicketsController {
   createTicket(
     @Body() data: TicketCreateDto,
     @Req() request,
-  ): Promise<TicketCreateDto> {
+  ): Promise<TicketResponse> {
     const { user } = request;
     return this.ticketService.createTicket(user.email, data);
   }
 
   @ApiOperation({ summary: 'Get all tickets' })
   @ApiOkResponse({
-    type: [TicketCreateDto],
+    type: [TicketResponse],
     description: 'Get all tickets',
   })
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAllTickets(): Promise<Ticket[]> {
+  async getAllTickets(): Promise<TicketResponse[]> {
     return this.ticketService.getAllTickets();
   }
 
@@ -69,7 +69,10 @@ export class TicketsController {
   })
   @UseGuards(JwtAuthGuard)
   @Delete()
-  deleteTicket(@Query('id') ticketId: number, @Req() request): Promise<Ticket> {
+  deleteTicket(
+    @Query('id') ticketId: number,
+    @Req() request,
+  ): Promise<boolean> {
     const { user } = request;
     return this.ticketService.deleteTicket(user.email, ticketId);
   }
