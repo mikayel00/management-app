@@ -17,6 +17,9 @@ export class Ticket {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   createdBy: User;
+
+  @Prop()
+  ticketId: number;
 }
 
 export const TicketSchema = SchemaFactory.createForClass(Ticket);

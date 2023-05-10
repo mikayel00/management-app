@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Patch,
   Post,
   Query,
   Req,
@@ -33,7 +32,10 @@ export class TicketsController {
   })
   @UseGuards(JwtAuthGuard)
   @Post('/create')
-  createTicket(@Body() data: TicketCreateDto, @Req() request): Promise<Ticket> {
+  createTicket(
+    @Body() data: TicketCreateDto,
+    @Req() request,
+  ): Promise<TicketCreateDto> {
     const { user } = request;
     return this.ticketService.createTicket(user.email, data);
   }
@@ -45,10 +47,12 @@ export class TicketsController {
   })
   @UseGuards(JwtAuthGuard)
   @Get()
-  getAllTickets(): Promise<Ticket[]> {
+  async getAllTickets(): Promise<Ticket[]> {
     return this.ticketService.getAllTickets();
   }
 
+  //TODO update ticket
+  //
   // @ApiOperation({ summary: 'Update ticket' })
   // @ApiOkResponse({
   //   type: TicketCreateDto,
@@ -65,7 +69,7 @@ export class TicketsController {
   })
   @UseGuards(JwtAuthGuard)
   @Delete()
-  deleteTicket(@Query('id') ticketId, @Req() request) {
+  deleteTicket(@Query('id') ticketId: number, @Req() request): Promise<Ticket> {
     const { user } = request;
     return this.ticketService.deleteTicket(user.email, ticketId);
   }

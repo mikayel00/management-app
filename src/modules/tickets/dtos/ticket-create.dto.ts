@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { TicketStages } from '../enums';
 
 export class TicketCreateDto {
@@ -21,4 +21,10 @@ export class TicketCreateDto {
   @IsString()
   @IsEnum(TicketStages)
   stage: string;
+
+  @ApiProperty({
+    description: 'Ticket Id',
+  })
+  @IsNumber()
+  ticketId: number;
 }
