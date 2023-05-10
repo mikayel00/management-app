@@ -9,6 +9,7 @@ import {
 import { UserCreateDto } from '../users/dtos/user-create.dto';
 import { UserLoginDto } from './dtos/user-login.dto';
 import { AuthResponse } from './responses/user-login.response';
+import { UserResponse } from "../users/responses/user-response";
 
 @ApiTags('Auth Endpoints')
 @Controller('auth')
@@ -20,7 +21,7 @@ export class AuthController {
     description: 'Register user',
   })
   @Post('/register')
-  register(@Body() data: UserCreateDto): Promise<UserCreateDto> {
+  register(@Body() data: UserCreateDto): Promise<UserResponse> {
     return this.authService.registerUser(data);
   }
 

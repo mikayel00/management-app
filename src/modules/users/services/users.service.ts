@@ -7,11 +7,13 @@ import { UserCreateDto } from '../dtos/user-create.dto';
 import { UserUpdateDto } from '../dtos/user-update.dto';
 import { EXCLUDED_FIELDS } from '../constants';
 import { UserResponse } from '../responses/user-response';
+import { IdService } from '../../global/id/id.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    private readonly idService: IdService,
   ) {}
 
   async hashPassword(password: string): Promise<string> {
@@ -21,11 +23,14 @@ export class UsersService {
   async findUserByEmail(email: string) {
     return await this.userModel.findOne({ email: email }).exec();
   }
-  async createUser(data: UserCreateDto): Promise<UserCreateDto> {
+  async createUser(data: UserCreateDto): Promise<UserResponse> {
     data.password = await this.hashPassword(data.password);
-    const createdUser = new this.userModel(data);
-    await createdUser.save();
-    return data;
+    const user = {
+      ...data,
+      userId: await this.generateAndCheckId(),
+    };
+    const createdUser = new this.userModel(user);
+    return await createdUser.save();
   }
 
   async publicUser(email: string) {
@@ -55,5 +60,13 @@ export class UsersService {
       .populate('tickets')
       .select(EXCLUDED_FIELDS)
       .exec();
+  }
+
+  private async generateAndCheckId(): Promise<number> {
+    let generatedId = await this.idService.generateId();
+    while (await this.userModel.findOne({ id: generatedId })) {
+      generatedId = await this.idService.generateId();
+    }
+    return generatedId;
   }
 }
