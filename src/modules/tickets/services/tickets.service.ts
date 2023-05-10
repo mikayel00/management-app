@@ -1,16 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Ticket, TicketDocument } from '../schemas/ticket.schema';
 import { TicketCreateDto } from '../dtos/ticket-create.dto';
 import { User, UserDocument } from '../../users/schemas/user.schema';
 import { EXCLUDED_FIELDS } from '../../users/constants';
+import { IdService } from '../../global/id/id.service';
 
 @Injectable()
 export class TicketsService {
   constructor(
     @InjectModel(Ticket.name) private ticketModel: Model<TicketDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private readonly idService: IdService,
   ) {}
   async createTicket(email: string, data: TicketCreateDto): Promise<Ticket> {
     const user = await this.userModel
@@ -22,6 +24,7 @@ export class TicketsService {
       createdBy: user,
       ...data,
     };
+    ticket.ticketId = await this.generateAndCheckId();
     const createdTicket = new this.ticketModel(ticket);
     await this.userModel.findOneAndUpdate(
       { email: email },
@@ -40,19 +43,33 @@ export class TicketsService {
       .exec();
   }
 
-  async updateTicket(id: string) {
-    return;
-  }
+  // async updateTicket(id: string) {
+  //   return;
+  // }
 
-  async deleteTicket(email: string, ticketId: string) {
-    const ticket = await this.ticketModel.findById(ticketId);
-    console.log(ticket);
+  async deleteTicket(email: string, ticketId: number) {
+    const ticket = await this.ticketModel.findOneAndDelete({
+      ticketId: ticketId,
+    });
+    if (!ticket) {
+      throw new NotFoundException(`Ticket with ${ticketId} id not found.`);
+    }
     await this.userModel.findOneAndUpdate(
       { email: email },
       {
-        $pull: { tickets: ticketId },
+        $pull: {
+          tickets: ticket._id,
+        },
       },
     );
-    return this.ticketModel.findByIdAndDelete(ticketId);
+    return ticket;
+  }
+
+  private async generateAndCheckId() {
+    let generatedId = await this.idService.generateId();
+    while (await this.ticketModel.findOne({ id: generatedId })) {
+      generatedId = await this.idService.generateId();
+    }
+    return generatedId;
   }
 }
