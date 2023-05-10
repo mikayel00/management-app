@@ -15,7 +15,7 @@ export class UserUpdateDto {
   secondName: string;
 
   @ApiProperty({
-    description: "Username",
+    description: 'Username',
   })
   @IsString()
   username: string;

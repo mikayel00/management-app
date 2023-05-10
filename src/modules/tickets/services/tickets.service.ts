@@ -7,6 +7,7 @@ import { User, UserDocument } from '../../users/schemas/user.schema';
 import { EXCLUDED_FIELDS } from '../../users/constants';
 import { IdService } from '../../global/id/id.service';
 import { TicketResponse } from '../responses/ticket-response';
+import { TICKET_ERROR } from '../../common/exceptions/constants';
 
 @Injectable()
 export class TicketsService {
@@ -56,7 +57,7 @@ export class TicketsService {
       ticketId: ticketId,
     });
     if (!ticket) {
-      throw new NotFoundException(`Ticket with ${ticketId} id not found.`);
+      throw new NotFoundException(TICKET_ERROR.TICKET_NOT_EXISTS);
     }
     await this.userModel.findOneAndUpdate(
       { email: email },
