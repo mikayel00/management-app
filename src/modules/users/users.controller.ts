@@ -16,22 +16,21 @@ import {
 import { UsersService } from './services/users.service';
 import { UserUpdateDto } from './dtos/user-update.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-guard';
-import { User } from './schemas/user.schema';
-import { TicketCreateDto } from '../tickets/dtos/ticket-create.dto';
+import { UserResponse } from './responses/user-response';
 
 @ApiTags('Users Endpoints')
 @Controller('/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiOperation({ summary: 'Get all tickets' })
+  @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({
-    type: [TicketCreateDto],
-    description: 'Get all tickets',
+    type: [UserResponse],
+    description: 'Get all users',
   })
   @UseGuards(JwtAuthGuard)
   @Get()
-  getAllUsers(): Promise<User[]> {
+  getAllUsers(): Promise<UserResponse[]> {
     return this.usersService.getAllUsers();
   }
   @ApiOperation({ summary: 'User update' })
@@ -55,7 +54,7 @@ export class UsersController {
   })
   @UseGuards(JwtAuthGuard)
   @Delete()
-  deleteUser(@Req() request): Promise<User> {
+  deleteUser(@Req() request): Promise<boolean> {
     const { user } = request;
     return this.usersService.deleteUser(user.email);
   }

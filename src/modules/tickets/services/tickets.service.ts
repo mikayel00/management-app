@@ -6,6 +6,7 @@ import { TicketCreateDto } from '../dtos/ticket-create.dto';
 import { User, UserDocument } from '../../users/schemas/user.schema';
 import { EXCLUDED_FIELDS } from '../../users/constants';
 import { IdService } from '../../global/id/id.service';
+import { TicketResponse } from '../responses/ticket-response';
 
 @Injectable()
 export class TicketsService {
@@ -14,7 +15,10 @@ export class TicketsService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly idService: IdService,
   ) {}
-  async createTicket(email: string, data: TicketCreateDto): Promise<Ticket> {
+  async createTicket(
+    email: string,
+    data: TicketCreateDto,
+  ): Promise<TicketResponse> {
     const user = await this.userModel
       .findOne({ email: email })
       .select(EXCLUDED_FIELDS)
@@ -23,8 +27,8 @@ export class TicketsService {
     const ticket = {
       createdBy: user,
       ...data,
+      ticketId: await this.generateAndCheckId(),
     };
-    ticket.ticketId = await this.generateAndCheckId();
     const createdTicket = new this.ticketModel(ticket);
     await this.userModel.findOneAndUpdate(
       { email: email },
@@ -36,7 +40,7 @@ export class TicketsService {
     return await createdTicket.save();
   }
 
-  async getAllTickets(): Promise<Ticket[]> {
+  async getAllTickets(): Promise<TicketResponse[]> {
     return this.ticketModel
       .find()
       .populate({ path: 'createdBy', select: EXCLUDED_FIELDS })
@@ -47,7 +51,7 @@ export class TicketsService {
   //   return;
   // }
 
-  async deleteTicket(email: string, ticketId: number) {
+  async deleteTicket(email: string, ticketId: number): Promise<boolean> {
     const ticket = await this.ticketModel.findOneAndDelete({
       ticketId: ticketId,
     });
@@ -62,10 +66,10 @@ export class TicketsService {
         },
       },
     );
-    return ticket;
+    return true;
   }
 
-  private async generateAndCheckId() {
+  private async generateAndCheckId(): Promise<number> {
     let generatedId = await this.idService.generateId();
     while (await this.ticketModel.findOne({ id: generatedId })) {
       generatedId = await this.idService.generateId();

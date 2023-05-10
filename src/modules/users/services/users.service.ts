@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { UserCreateDto } from '../dtos/user-create.dto';
 import { UserUpdateDto } from '../dtos/user-update.dto';
 import { EXCLUDED_FIELDS } from '../constants';
+import { UserResponse } from '../responses/user-response';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +14,7 @@ export class UsersService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async hashPassword(password: string) {
+  async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, 10);
   }
 
@@ -41,13 +42,14 @@ export class UsersService {
       .select(EXCLUDED_FIELDS);
   }
 
-  async deleteUser(email: string): Promise<User> {
-    return this.userModel
+  async deleteUser(email: string): Promise<boolean> {
+    await this.userModel
       .findOneAndDelete({ email: email })
       .select(EXCLUDED_FIELDS);
+    return true;
   }
 
-  async getAllUsers(): Promise<User[]> {
+  async getAllUsers(): Promise<UserResponse[]> {
     return this.userModel
       .find()
       .populate('tickets')

@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { UserCreateDto } from '../users/dtos/user-create.dto';
 import { UserLoginDto } from './dtos/user-login.dto';
+import { AuthResponse } from './responses/user-login.response';
 
 @ApiTags('Auth Endpoints')
 @Controller('auth')
@@ -25,11 +26,11 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Login user' })
   @ApiOkResponse({
-    type: UserCreateDto,
+    type: AuthResponse,
     description: 'Login user',
   })
   @Post('/login')
-  login(@Body() data: UserLoginDto): Promise<UserCreateDto> {
+  login(@Body() data: UserLoginDto): Promise<AuthResponse> {
     return this.authService.loginUser(data);
   }
 }
