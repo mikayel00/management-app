@@ -16,7 +16,7 @@ export class UserCreateDto {
   secondName: string;
 
   @ApiProperty({
-    description: "Username",
+    description: 'Username',
   })
   @IsString()
   username: string;
