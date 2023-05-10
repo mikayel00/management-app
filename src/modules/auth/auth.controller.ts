@@ -9,7 +9,7 @@ import {
 import { UserCreateDto } from '../users/dtos/user-create.dto';
 import { UserLoginDto } from './dtos/user-login.dto';
 import { AuthResponse } from './responses/user-login.response';
-import { UserResponse } from "../users/responses/user-response";
+import { UserResponse } from '../users/responses/user-response';
 
 @ApiTags('Auth Endpoints')
 @Controller('auth')
